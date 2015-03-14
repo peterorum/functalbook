@@ -1,0 +1,15 @@
+{
+  "name": "functalbook",
+  "version": "1.0.0",
+  "description": "Write to Daily Functal facebook page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Peter Orum",
+  "license": "MIT",
+  "dependencies": {
+    "fbgraph": "^0.3.0",
+    "ramda": "^0.11.0"
+  }
+}
