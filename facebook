@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source $HOME/.bash_profile
+
+cd $HOME/functalbook
+
+node facebook.js

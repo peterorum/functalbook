@@ -2,7 +2,7 @@
 {
     "use strict";
 
-    // just servers up one particular file
+    // just serves up one particular file
 
     var fs = require('fs');
     var http = require('http');
