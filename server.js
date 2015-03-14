@@ -4,6 +4,9 @@
 
     // just serves up one particular file
 
+    // should always be running
+    // nohup node server&
+
     var fs = require('fs');
     var http = require('http');
     var url = require('url');
