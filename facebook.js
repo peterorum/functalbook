@@ -86,7 +86,7 @@
                 // create message & serve up local file
                 var post = {
                     message: "#fractal #functal",
-                    url: "http://" + process.env.fb_df.server + '/' + file
+                    url: "http://" + process.env.fb_df_server + '/' + file
                 };
 
                 // post to page photos
