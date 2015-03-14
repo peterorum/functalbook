@@ -19,11 +19,6 @@
     // extended access token to main account
     graph.setAccessToken(process.env.fb_df_access_token);
 
-    // graph.post("/feed", post, function(err, res)
-    // {
-    //     console.log(res); // { id: xxxxx}
-    // });
-
     // data: [
     //     {
     //         access_token: ...
