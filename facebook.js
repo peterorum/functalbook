@@ -53,7 +53,15 @@
 
             console.log(src);
 
-            fs.unlinkSync(dest);
+            try
+            {
+                fs.unlinkSync(dest);
+            }
+            catch(ex)
+            {
+                //
+            }
+
             fs.renameSync(src, dest);
 
             // delete associated json
