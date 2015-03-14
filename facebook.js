@@ -16,7 +16,10 @@
     // export fb_df_access_token=
     // export fb_df_server="http://ec2-999.compute-1.amazonaws.com:8081"
 
-    // extended access token to main account
+    // get first access token from graph explorer for the app, giving page management & publish permissions...
+    // https://developers.facebook.com/tools/explorer?method=GET&version=v2.2
+    // then extend access token to main account (extend.js)
+
     graph.setAccessToken(process.env.fb_df_access_token);
 
     // data: [
@@ -80,10 +83,10 @@
 
                 // console.log(df);
 
-                // change access token to pages'
+                // change access token to page's
                 graph.setAccessToken(df.access_token);
 
-                //------------ via url
+                //------------ post via url using local server
 
                 // create message & serve up local file
                 var post = {
