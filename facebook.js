@@ -37,7 +37,7 @@
     // copy latest file over
     var functalsFolder = process.env.HOME + '/Dropbox/functals/medium';
 
-    fsq.readdir(folder).then(function(files)
+    fsq.readdir(functalsFolder).then(function(files)
     {
         // get oldest (first)
         var file = R.find(function(f)
