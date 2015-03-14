@@ -7,7 +7,7 @@
     var graph = require('fbgraph');
     var R = require('ramda');
     var fs = require('fs');
-    var fsq = require('../functals/fsq');
+    var fsq = require('../functal/fsq');
 
     // extended access token to main account
     graph.setAccessToken(process.env.fb_df_access_token);
