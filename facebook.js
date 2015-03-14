@@ -48,7 +48,7 @@
         if (file)
         {
             // move to current folder by renaming
-            var src = folder + file;
+            var src = functalsFolder + '/' + file;
             var dest = 'functal.png';
 
             console.log(src);
