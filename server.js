@@ -4,9 +4,9 @@
 
     // just servers up one particular file
 
-    fs = require('fs');
-    http = require('http');
-    url = require('url');
+    var fs = require('fs');
+    var http = require('http');
+    var url = require('url');
 
     http.createServer(function(req, res)
     {
