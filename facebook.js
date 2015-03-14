@@ -57,15 +57,18 @@
             {
                 fs.unlinkSync(dest);
             }
-            catch(ex)
-            {
-                //
-            }
+            catch (ex)
+            {}
 
             fs.renameSync(src, dest);
 
             // delete associated json
-            fsq.unlinkSync(src.replace(/\.png/, '.json'));
+            try
+            {
+                fsq.unlinkSync(src.replace(/\.png/, '.json'));
+            }
+            catch (ex)
+            {}
 
             // get page accounts
             graph.get("me/accounts", function(err, res)
