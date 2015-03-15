@@ -9,12 +9,7 @@
     var fs = require('fs');
     var fsq = require('../functal/fsq');
 
-    // tokens & server are environment variables
-    // # facebook daily functal
-    // export fb_df_app_id=
-    // export fb_df_app_secret=
-    // export fb_df_access_token=
-    // export fb_df_server="http://ec2-999.compute-1.amazonaws.com:8081"
+    // tokens are environment variables
 
     // Authenticate via OAuth
     var client = tumblr.createClient(
