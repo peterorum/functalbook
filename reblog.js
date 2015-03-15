@@ -25,6 +25,8 @@
             console.log(err);
         }
 
+        //todo//////////////////////// skip if queue is not empty
+
         // console.log(JSON.stringify(data, null, 4));
 
         var blogName = 'peterorum';
@@ -46,10 +48,14 @@
             var rebloggedIds = R.compose(R.uniq, R.pluck('reblogged_from_id'), R.filter(R.has('reblogged_from_id')))(allPosts);
 
             // find posts that haven't been reblogged yet
-            // todo: must be at least 3 months old
+            // must be at least 100 days old
             var unreblogged = R.filter(function(p)
             {
-                return ! R.contains(p.id.toString(), rebloggedIds);
+                // '2014-08-17 08:02:00 GMT
+                var age = moment.utc(p.date, 'YYYY-MM-DD HH:mm:ss');
+
+                return !R.contains(p.id.toString(), rebloggedIds) && moment.duration(moment().diff(age)).asDays() >= 100;
+
             }, posts);
 
             console.log('unreblogged count', unreblogged.length);
