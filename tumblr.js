@@ -64,6 +64,7 @@
                 var options = {
                     caption: 'Fractal',
                     tags: 'fractal,functal',
+                    format: 'markdown',
                     link: 'https://functal.tumblr.com', // something required or post fails with 401
                     data: file
                 };
