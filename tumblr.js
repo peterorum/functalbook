@@ -62,7 +62,8 @@
                 // console.log(df);
 
                 var options = {
-                    caption: '#fractal #functal', // todo: add as tags
+                    caption: 'Fractal',
+                    tags: 'fractal,functal',
                     link: 'https://functal.tumblr.com', // something required or post fails with 401
                     data: file
                 };
