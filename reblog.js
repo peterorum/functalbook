@@ -44,7 +44,7 @@
             posts = R.filter(R.not(R.prop('reblogged_from_id')), posts);
 
             // just get important fields
-            posts = R.project(['id', 'post_url', 'date', 'caption', 'note_count', 'reblog_key'], posts);
+            posts = R.project(['id', 'post_url', 'date', 'caption', 'note_count', 'reblog_key', 'tags'], posts);
 
             // set date to the latest reblog, if any
             var getLastPublishedDate = function(post)
@@ -85,6 +85,26 @@
             {
                 console.log(err || '');
                 console.log(data);
+
+                var id = data.id;
+
+                // update tags
+
+                if (post.tags.length)
+                {
+                    var tags = R.join(',', post.tags);
+
+                    client.edit(blogName,
+                    {
+                        id: id,
+                        tags: tags
+                    }, function(err, data)
+                    {
+                        console.log(err || '');
+                        console.log(data);
+                    });
+
+                }
             });
         };
 
