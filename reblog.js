@@ -54,6 +54,8 @@
 
             console.log('unreblogged count', unreblogged.length);
 
+            if (unreblogged.length)
+            {
             // grab the oldest
             var post = R.last(unreblogged);
 
@@ -70,6 +72,11 @@
                 console.log(err || '');
                 console.log(data);
             });
+        }
+        else
+        {
+            console.log('No posts not reblogged');
+        }
         };
 
         var getPosts = function(offset, posts, callback)
