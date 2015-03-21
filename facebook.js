@@ -70,7 +70,7 @@
             // delete associated json
             try
             {
-                fsq.unlinkSync(src.replace(/\.png/, '.json'));
+                fs.unlinkSync(src.replace(/\.png/, '.json'));
             }
             catch (ex)
             {}
