@@ -90,7 +90,7 @@
 
                 // create message & serve up local file
                 var post = {
-                    message: "#fractal #functal",
+                    message: "#fractal #functal #digitalart",
                     url: process.env.fb_df_server + '/' + dest
                 };
 

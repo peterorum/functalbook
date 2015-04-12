@@ -40,7 +40,7 @@
             //------------ via url
 
             var post = {
-                message: "#fractal #functal",
+                message: "#fractal #functal #digitalart",
                 url: "https://pbs.twimg.com/media/CACiB7TWoAEskBa.png"
             };
 
