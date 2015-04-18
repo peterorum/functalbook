@@ -6,6 +6,7 @@
 
     var tumblr = require('tumblr.js');
     var R = require('ramda');
+    var moment = require('moment');
     var fs = require('fs');
     var fsq = require('../functal/fsq');
 
@@ -62,7 +63,7 @@
                 // console.log(df);
 
                 var options = {
-                    caption: 'Fractal',
+                    caption: 'Fractal ' + moment().format('YYYYMMDD.HH'),
                     tags: 'fractal,functal',
                     format: 'markdown',
                     link: 'https://functal.tumblr.com', // something required or post fails with 401
