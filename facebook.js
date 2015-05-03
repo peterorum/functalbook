@@ -7,8 +7,8 @@
     var graph = require('fbgraph');
     var R = require('ramda');
     var fs = require('fs');
-    // var moment = require('moment');
     var fsq = require('../functal/fsq');
+    var s3 = require('../functal/s3client');
 
     // tokens & server are environment variables
     // # facebook daily functal
@@ -40,41 +40,20 @@
     // ...
     // }],
 
-    // copy latest file over
-    var functalsFolder = process.env.HOME + '/Dropbox/functals/medium';
+    var bucket = 'functal-images';
+    var bucketJson = 'functal-json';
+    var cdn = 'https://d1aienjtp63qx3.cloudfront.net/';
 
-    fsq.readdir(functalsFolder).then(function(files)
+    s3.list('functal-images').then(function(result)
     {
-        // get oldest (first)
-        var file = R.find(function(f)
+        if (result.count === 0)
         {
-            return /\.png$/.test(f);
-        }, files);
-
-        if (file)
+            console.log('No files');
+        }
+        else
         {
-            // move to current folder by renaming
-            var src = functalsFolder + '/' + file;
-            var dest = 'functal.png';
-
-            console.log(src);
-
-            try
-            {
-                fs.unlinkSync(dest);
-            }
-            catch (ex)
-            {}
-
-            fs.renameSync(src, dest);
-
-            // delete associated json
-            try
-            {
-                fs.unlinkSync(src.replace(/\.png/, '.json'));
-            }
-            catch (ex)
-            {}
+            var oldestKey = result.files[0].Key;
+            var url = cdn + oldestKey;
 
             // get page accounts
             graph.get("me/accounts", function(err, res)
@@ -82,29 +61,33 @@
                 // find relevant age to get access token for it
                 var df = R.find(R.propEq('name', 'Daily Functal'), res.data);
 
-                // console.log(df);
-
                 // change access token to page's
                 graph.setAccessToken(df.access_token);
-
-                //------------ post via url using local server
 
                 // create message & serve up local file
                 var post = {
                     message: "#fractal #functal #digitalart",
-                    url: process.env.fb_df_server + '/' + dest
+                    url: url
                 };
 
                 // post to page photos
+
                 graph.post("/" + df.id + "/photos", post, function(err, res)
                 {
                     console.log(res); // { id: xxxxx}
+
+                    // delete image
+                    s3.delete(bucket, oldestKey)
+                        .then(function()
+                        {
+                            // delete json
+                            return s3.delete(bucketJson, oldestKey.replace(/png$/, 'json'));
+                        })
+                        .done();
+
                 });
             });
         }
-        else
-        {
-            console.log('no file');
-        }
     });
+
 }());
