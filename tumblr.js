@@ -9,6 +9,7 @@
     var moment = require('moment');
     var fs = require('fs');
     var fsq = require('../functal/fsq');
+    var s3 = require('../functal/s3client');
 
     // tokens are environment variables
 
@@ -21,77 +22,67 @@
         token_secret: process.env.tumblr_token_secret
     });
 
-    var isDev = (process.env.TERM_PROGRAM === 'Apple_Terminal');
+    var bucket = 'functal-images';
+    var bucketJson = 'functal-json';
 
-    var functalsFolder = process.env.HOME + '/Dropbox/functals';
-
-    var folder = functalsFolder + '/medium/';
-
-    fsq.readdir(folder).then(function(files)
+    s3.list('functal-images').then(function(result)
     {
-        var file = R.find(function(f)
+        if (result.count === 0)
         {
-            return /\.png$/.test(f);
-        }, files);
-
-        if (file)
-        {
-            file = folder + file;
-
-            console.log(file);
-
-            // Make the request
-            client.userInfo(function(err, data)
-            {
-                if (err)
-                {
-                    console.log(err);
-                }
-
-                // console.log(JSON.stringify(data, null, 4));
-
-                // client.userInfo(function(err, data)
-                //         {
-                //             R.forEach(function(blog)
-                //             {
-                //                 console.log(blog.name);
-                //             }, data.user.blogs);
-                // });
-
-                // get the blog
-                var df = R.find(R.propEq('name', 'functal'), data.user.blogs);
-                // console.log(df);
-
-                var options = {
-                    caption: 'Fractal ' + moment().format('YYYYMMDD.HH'),
-                    tags: 'fractal,functal',
-                    format: 'markdown',
-                    link: 'https://functal.tumblr.com', // something required or post fails with 401
-                    data: file
-                };
-
-                client.photo('functal', options, function(err, data)
-                {
-                    console.log(err);
-                    console.log(data);
-
-                    // delete file & json
-                    fsq.unlink(file).then(function()
-                    {
-                        try
-                        {
-                            fsq.unlink(file.replace(/\.png/, '.json'));
-                        }
-                        catch (ex)
-                        {}
-                    });
-
-                });
-            });
+            console.log('No files');
         }
         else
         {
-            console.log('no file');
+            var oldestKey = result.files[0].Key;
+
+            var tmpFile = '/tmp/tumblr-' + oldestKey;
+
+            s3.download(bucket, oldestKey, tmpFile).then(function()
+            {
+                client.userInfo(function(err, data)
+                {
+                    if (err)
+                    {
+                        console.log(err);
+                    }
+
+                    // get the blog
+                    var df = R.find(R.propEq('name', 'functal'), data.user.blogs);
+
+                    var options = {
+                        caption: 'Fractal ' + moment().format('YYYYMMDD.HH'),
+                        tags: 'fractal,functal',
+                        format: 'markdown',
+                        link: 'https://functal.tumblr.com', // something required or post fails with 401
+                        data: tmpFile
+                    };
+
+                    client.photo('functal', options, function(err, data)
+                    {
+                        if (err)
+                        {
+                            console.log(err);
+                        }
+
+                        console.log(data);
+
+                        // delete image
+                        s3.delete(bucket, oldestKey)
+                            .then(function()
+                            {
+                                // delete json
+                                return s3.delete(bucketJson, oldestKey.replace(/png$/, 'json'));
+                            })
+                            .then(function()
+                            {
+                                // delete local file
+                                return fsq.unlink(tmpFile);
+                            })
+                            .done();
+
+                    });
+                });
+            });
         }
     });
 }());
