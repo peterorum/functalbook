@@ -71,7 +71,7 @@
                             .then(function()
                             {
                                 // delete json
-                                return s3.delete(bucketJson, oldestKey.replace(/png$/, 'json'));
+                                return s3.delete(bucketJson, oldestKey.replace(/(png|jpg)/, 'json'));
                             })
                             .then(function()
                             {

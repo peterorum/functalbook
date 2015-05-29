@@ -58,7 +58,7 @@
             // get page accounts
             graph.get("me/accounts", function(err, res)
             {
-                // find relevant age to get access token for it
+                // find relevant page to get access token for it
                 var df = R.find(R.propEq('name', 'Daily Functal'), res.data);
 
                 // change access token to page's
@@ -76,12 +76,13 @@
                 {
                     console.log(res); // { id: xxxxx}
 
-                    // delete image
+                    // // delete image
+
                     s3.delete(bucket, oldestKey)
                         .then(function()
                         {
                             // delete json
-                            return s3.delete(bucketJson, oldestKey.replace(/png$/, 'json'));
+                            return s3.delete(bucketJson, oldestKey.replace(/(png|jpg)$/, 'json'));
                         })
                         .done();
 
