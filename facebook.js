@@ -52,8 +52,10 @@
         }
         else
         {
-            var oldestKey = result.files[0].Key;
-            var url = cdn + oldestKey;
+            var r = Math.floor(Math.random() * result.files.length);
+            var key = result.files[r].Key;
+
+            var url = cdn + key;
 
             // get page accounts
             graph.get("me/accounts", function(err, res)
@@ -76,15 +78,15 @@
                 {
                     console.log(res); // { id: xxxxx}
 
-                    // // delete image
+                    // delete image
 
-                    s3.delete(bucket, oldestKey)
-                        .then(function()
-                        {
-                            // delete json
-                            return s3.delete(bucketJson, oldestKey.replace(/(png|jpg)$/, 'json'));
-                        })
-                        .done();
+                    // s3.delete(bucket, key)
+                    //     .then(function()
+                    //     {
+                    //         // delete json
+                    //         return s3.delete(bucketJson, key.replace(/(png|jpg)$/, 'json'));
+                    //     })
+                    //     .done();
 
                 });
             });
