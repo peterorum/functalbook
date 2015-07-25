@@ -68,7 +68,7 @@
 
                 // create message & serve up local file
                 var post = {
-                    message: "#fractal #functal #digitalart",
+                    message: "#fractal #functal #digitalart iPhone app https://bit.ly/dailyfunctal",
                     url: url
                 };
 
