@@ -51,7 +51,7 @@
                     var df = R.find(R.propEq('name', 'functal'), data.user.blogs);
 
                     var options = {
-                        caption: 'Fractal ' + moment().format('YYYYMMDD.HH') + ' iPhone App https://bit.ly/dailyfunctal',
+                        caption: 'Fractal ' + moment().format('YYYYMMDD.HH') + ' iPhone app https://bit.ly/dailyfunctal',
                         tags: 'fractal,functal',
                         format: 'markdown',
                         link: 'https://functal.tumblr.com', // something required or post fails with 401
