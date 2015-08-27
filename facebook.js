@@ -1,14 +1,21 @@
-(function()
-{
-    "use strict";
+(function() {
+  "use strict";
 
-    // post & delete oldest file
+  // post & delete oldest file
 
-    var graph = require('fbgraph');
-    var R = require('ramda');
-    var fs = require('fs');
-    var fsq = require('../functal/fsq');
-    var s3 = require('../functal/s3client');
+  var graph = require('fbgraph');
+  var R = require('ramda');
+  var fs = require('fs');
+  var fsq = require('../functal/fsq');
+  var s3 = require('../functal/s3client');
+
+  var promise = require("bluebird");
+  var mongodb = promise.promisifyAll(require("mongodb"));
+  var mongoClient = promise.promisifyAll(mongodb.MongoClient);
+
+  mongoClient.connectAsync(process.env.mongo_functal).then(function(client) {
+
+    var db = client.db('functal');
 
     // tokens & server are environment variables
     // # facebook daily functal
@@ -44,53 +51,64 @@
     var bucketJson = 'functal-json';
     var cdn = 'https://d1aienjtp63qx3.cloudfront.net/';
 
-    s3.list('functal-images').then(function(result)
-    {
-        if (result.count === 0)
-        {
-            console.log('No files');
-        }
-        else
-        {
-            var r = Math.floor(Math.random() * result.files.length);
-            var key = result.files[r].Key;
+    s3.list('functal-images').then(function(result) {
+      if (result.count === 0) {
+        console.log('No files');
+      }
+      else {
+        var r = Math.floor(Math.random() * result.files.length);
+        var key = result.files[r].Key;
 
-            var url = cdn + key;
+        var url = cdn + key;
 
-            // get page accounts
-            graph.get("me/accounts", function(err, res)
+        // get page accounts
+        graph.get("me/accounts", function(err, res) {
+          // find relevant page to get access token for it
+          var df = R.find(R.propEq('name', 'Daily Functal'), res.data);
+
+          // change access token to page's
+          graph.setAccessToken(df.access_token);
+
+
+          // prefix msg with title if any
+          db.collection('images').findOneAsync(
             {
-                // find relevant page to get access token for it
-                var df = R.find(R.propEq('name', 'Daily Functal'), res.data);
+              name: key
+            }).then(function(image) {
 
-                // change access token to page's
-                graph.setAccessToken(df.access_token);
+            var msg = "#fractal #functal #digitalart iPhone app https://bit.ly/dailyfunctal";
 
-                // create message & serve up local file
-                var post = {
-                    message: "#fractal #functal #digitalart iPhone app https://bit.ly/dailyfunctal",
-                    url: url
-                };
+            if (image && image.title) {
+              msg = '"' + image.title + '" ' + msg;
+            }
 
-                // post to page photos
+            // create message & serve up local file
+            var post = {
+              message: msg,
+              url: url
+            };
 
-                graph.post("/" + df.id + "/photos", post, function(err, res)
-                {
-                    console.log(res); // { id: xxxxx}
+            // post to page photos
 
-                    // delete image
+            graph.post("/" + df.id + "/photos", post, function(err, res) {
+              console.log(res); // { id: xxxxx}
 
-                    // s3.delete(bucket, key)
-                    //     .then(function()
-                    //     {
-                    //         // delete json
-                    //         return s3.delete(bucketJson, key.replace(/(png|jpg)$/, 'json'));
-                    //     })
-                    //     .done();
+              client.close();
 
-                });
+              // delete image
+
+              // s3.delete(bucket, key)
+              //     .then(function()
+              //     {
+              //         // delete json
+              //         return s3.delete(bucketJson, key.replace(/(png|jpg)$/, 'json'));
+              //     })
+              //     .done();
+
             });
-        }
+          });
+        });
+      }
     });
-
+  });
 }());
