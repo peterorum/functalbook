@@ -50,7 +50,7 @@
             // get the blog
             var df = R.find(R.propEq('name', 'functal'), data.user.blogs);
 
-            var msg = "iPhone app https://bit.ly/dailyfunctal";
+            var msg = "[iPhone app](https://bit.ly/dailyfunctal)";
 
             // prefix msg with title if any
             db.collection('images').findOneAsync(
@@ -64,7 +64,7 @@
 
               var options = {
                 caption: msg,
-                tags: 'fractal,functal',
+                tags: 'fractal,functal,digital art',
                 format: 'markdown',
                 link: 'https://functal.tumblr.com', // something required or post fails with 401
                 data: tmpFile
