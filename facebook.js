@@ -76,7 +76,7 @@
               name: key
             }).then(function(image) {
 
-            var msg = "#fractal #functal #digitalart iPhone app https://bit.ly/dailyfunctal";
+            var msg = "#fractal #functal #digitalart";// iPhone app https://bit.ly/dailyfunctal";
 
             if (image && image.title) {
               msg = '"' + image.title + '" ' + msg;
