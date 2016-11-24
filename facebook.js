@@ -74,13 +74,13 @@
           db.collection('images').findOneAsync(
             {
               name: key
-            }).then(function(image) {
+            }).then(function(/*image*/) {
 
-            var msg = "#fractal #functal #digitalart";// iPhone app https://bit.ly/dailyfunctal";
+            var msg = "#fractal #functal #digitalart"; // iPhone app https://bit.ly/dailyfunctal";
 
-            if (image && image.title) {
-              msg = '"' + image.title + '" ' + msg;
-            }
+            // if (image && image.title) {
+            //   msg = '"' + image.title + '" ' + msg;
+            // }
 
             // create message & serve up local file
             var post = {

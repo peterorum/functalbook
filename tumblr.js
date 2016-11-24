@@ -56,11 +56,11 @@
             db.collection('images').findOneAsync(
               {
                 name: key
-              }).then(function(image) {
+              }).then(function(/*image*/) {
 
-              if (image && image.title) {
-                msg = '"' + image.title + '" ' + msg;
-              }
+              // if (image && image.title) {
+              //   msg = '"' + image.title + '" ' + msg;
+              // }
 
               var options = {
                 caption: msg,
