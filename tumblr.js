@@ -50,7 +50,7 @@
             // get the blog
             var df = R.find(R.propEq('name', 'functal'), data.user.blogs);
 
-            var msg = "";// "[iPhone app](https://bit.ly/dailyfunctal)";
+            var msg = "fractal";// "[iPhone app](https://bit.ly/dailyfunctal)";
 
             // prefix msg with title if any
             db.collection('images').findOneAsync(
