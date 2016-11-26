@@ -50,17 +50,17 @@
             // get the blog
             var df = R.find(R.propEq('name', 'functal'), data.user.blogs);
 
-            var msg = "fractal";// "[iPhone app](https://bit.ly/dailyfunctal)";
+            var msg = "";// "[iPhone app](https://bit.ly/dailyfunctal)";
 
             // prefix msg with title if any
             db.collection('images').findOneAsync(
               {
                 name: key
-              }).then(function(/*image*/) {
+              }).then(function(image) {
 
-              // if (image && image.title) {
-              //   msg = '"' + image.title + '" ' + msg;
-              // }
+              if (image && image.caption) {
+                msg = '"' + image.caption + '" ' + msg;
+              }
 
               var options = {
                 caption: msg,
