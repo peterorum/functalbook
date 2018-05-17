@@ -1,7 +1,6 @@
 {
-    "extends": "standard",
-    "plugins": [
-        "standard",
-        "promise"
-    ]
+  "extends": ["standard", "prettier", "prettier/standard"],
+  "plugins": ["standard", "promise"],
+  "parserOptions": { "ecmaVersion": 6 },
+  "rules": {}
 }
