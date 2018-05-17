@@ -1,3 +1,5 @@
+'use strict'
+
 // docs: https://www.npmjs.com/package/@jigsaw/tumblr
 const tumblr = require('tumblr.js')
 
