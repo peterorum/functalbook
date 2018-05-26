@@ -10,7 +10,7 @@ const differenceInDays = require('date-fns/difference_in_days')
 
 // config
 
-const postsToKeep = 100
+const postsToKeep = 140
 
 const tempFile = `/tmp/posts.json`
 const resultsFile = `/tmp/results.json`
@@ -18,7 +18,7 @@ const resultsFile = `/tmp/results.json`
 // if false, expects /tmp/posts.json to exist.
 // first time run as dev, it will save the file. Takes a while.
 // actual deletion does not happen for dev.
-const isDev = false
+const isDev = true
 
 const today = new Date()
 
