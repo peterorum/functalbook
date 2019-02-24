@@ -5,8 +5,8 @@
 
   var tumblr = require('tumblr.js')
   var R = require('ramda')
-  var fs = require('fs')
-  var fsq = require('../functal/fsq')
+  // var fs = require('fs')
+  // var fsq = require('../functal/fsq')
 
   // Authenticate via OAuth
   var client = tumblr.createClient({
@@ -145,7 +145,7 @@
       // kick off
       getPosts(0, [], processPosts)
     } else {
-      console.log('Skip due o queue:', blog.queue)
+      console.log('Skip due to queue:', blog.queue)
     }
   })
 })()
