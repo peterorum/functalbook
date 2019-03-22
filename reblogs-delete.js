@@ -4,13 +4,10 @@
 const tumblr = require('tumblr.js')
 
 const fs = require('fs')
-const sortBy = require('lodash/sortBy')
 const differenceInDays = require('date-fns/difference_in_days')
 /* eslint-disable handle-callback-err */
 
 // config
-
-const postsToKeep = 140
 
 const tempFile = `/tmp/posts.json`
 const resultsFile = `/tmp/results.json`
@@ -18,7 +15,7 @@ const resultsFile = `/tmp/results.json`
 // if false, expects /tmp/posts.json to exist.
 // first time run as dev, it will save the file. Takes a while.
 // actual deletion does not happen for dev.
-const isDev = false
+const isDev = true
 
 console.log('is dev:', isDev);
 
@@ -81,11 +78,11 @@ client.userInfo((err, data) => {
 
   // get stats
 
-  const deleteLeastPopular = posts => {
+  const deleteReblogs = posts => {
     console.log('Count', posts.length)
 
-    // filter out reblogs
-    let data = posts.filter(x => !x.reblogged_from_id).map(x => ({
+    // get reblogs
+    let reblogs = posts.filter(x => x.reblogged_from_id).map(x => ({
       id: x.id,
       url: x.post_url,
       likes: x.note_count,
@@ -93,40 +90,41 @@ client.userInfo((err, data) => {
       likesPerDay: x.note_count / (1 + differenceInDays(today, x.date))
     }))
 
-    data = sortBy(data, x => x.likesPerDay)
+    console.log('All posts', posts.length);
+    console.log('Reblogs', reblogs.length)
 
-    console.log(data.length)
+    fs.writeFileSync(resultsFile, JSON.stringify(reblogs))
 
-    fs.writeFileSync(resultsFile, JSON.stringify(data))
+    const toDelete = reblogs;
 
-    if (data.length > postsToKeep) {
-      // delete  lowest rated one
-      const id = data[0].id
+    let count = 0;
+    let deletions = 0;
 
-      const toDelete = posts
-        .filter(x => x.id === id || x.reblogged_from_id === id.toString())
-        .map(x => ({ id: x.id, url: x.post_url }))
+    if (true) { // !isDev) {
+      toDelete.forEach(x => {
+        count += 1;
 
-      console.log(toDelete)
-
-      if (!isDev) {
-        toDelete.forEach(x => {
+        setTimeout(() => {
           client.deletePost(blogName, x.id, (err, data) => {
             if (err) {
               console.log('Error deleting', err)
             } else {
-              console.log('Deleted', x.url)
+              deletions += 1;
+              console.log('Deleted', deletions, x.url)
             }
           })
-        })
-      }
+
+        }, count * 3000)
+
+      })
     }
+
   }
 
   const processPosts = posts => {
     fs.writeFileSync(tempFile, JSON.stringify(posts, null, 2))
 
-    deleteLeastPopular(posts)
+    deleteReblogs(posts)
   }
 
   const getPosts = (offset, posts, callback) => {
@@ -156,12 +154,10 @@ client.userInfo((err, data) => {
 
   // start
 
-  if (blog.posts > postsToKeep) {
-    if (!isDev || !fs.existsSync(tempFile)) {
-      getPosts(0, [], processPosts)
-    } else {
-      const posts = JSON.parse(fs.readFileSync(tempFile))
-      deleteLeastPopular(posts)
-    }
+  if (!isDev || !fs.existsSync(tempFile)) {
+    getPosts(0, [], processPosts)
+  } else {
+    const posts = JSON.parse(fs.readFileSync(tempFile))
+    deleteReblogs(posts)
   }
 })
