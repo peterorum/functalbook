@@ -1,27 +1,7 @@
-(function()
-{
-    var graph = require('fbgraph');
+// lambda
 
-    graph.setAccessToken(process.env.fb_df_access_token);
+const reblog = require('./reblog.js').reblog
 
-    var options = {
-        timeout: 3000,
-        pool:
-        {
-            maxSockets: Infinity
-        },
-        headers:
-        {
-            connection: "keep-alive"
-        }
-    };
-
-    graph
-        .setOptions(options)
-        .get("me", function(err, res)
-        {
-            console.log(res);
-        });
-
-
-})();
+exports.handler = function(event, context, callback) {
+  reblog().then(() => callback(null, `reblogged`))
+}

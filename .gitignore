@@ -12,3 +12,5 @@ node_modules
 tumblrPosts.js
 
 .tern-port
+
+*.zip

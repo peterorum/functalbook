@@ -1,0 +1,11 @@
+#!/bin/sh
+
+zip -j function.zip index.js reblog.js
+zip -rq function.zip node_modules
+
+aws lambda update-function-code \
+  --function-name tumblrreblog \
+  --zip-file fileb://function.zip \
+  --region us-east-1
+
+rm function.zip
