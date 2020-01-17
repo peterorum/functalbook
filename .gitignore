@@ -11,6 +11,8 @@ node_modules
 
 *.code-workspace
 
+extend-secret.js
+
 tumblrPosts.js
 
 .tern-port
