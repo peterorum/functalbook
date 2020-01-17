@@ -9,6 +9,8 @@ node_modules
 *.sublime-project
 *.sublime-workspace
 
+*.code-workspace
+
 tumblrPosts.js
 
 .tern-port
