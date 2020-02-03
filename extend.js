@@ -6,8 +6,13 @@
 
   // this may be required if my facebook password changes
 
-  // do for both daily functal & daliy jzx.
+  // do for both daily functal & daily jzx.
   // replace process.env.fb_df_access_token below with the token from explorer page
+
+  // instead of this, use
+  // https://developers.facebook.com/tools/explorer/
+  // then, to extend
+  // https://developers.facebook.com/tools/debug/accesstoken/
 
   graph.setAccessToken(process.env.fb_df_access_token);
 
